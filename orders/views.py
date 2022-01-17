@@ -8,11 +8,11 @@ from . serializers import OrderCreationSerializer
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, IsAdminUser
 from django.db.models import Q
 from drf_yasg.utils import swagger_auto_schema
-from django.core.mail import send_mail
+
 # from django.contrib.auth import get_user_model
 
 # User = get_user_model()
-# change permission_classes
+
 class OrderCreateListView(generics.GenericAPIView):
     serializer_class = serializers.OrderCreationSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -31,13 +31,6 @@ class OrderCreateListView(generics.GenericAPIView):
         user = request.user
         if serializer.is_valid():
             serializer.save(customer=user)
-            send_mail(
-                'Your order from Biryani Restaurant',
-                'Thank you for ordering Biryani',
-                'tejasjdorge@gmail.com',
-                [user.email],
-                fail_silently=False,
-            )
             return Response(data=serializer.data,status=status.HTTP_200_OK)            
         return Response(data=serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
